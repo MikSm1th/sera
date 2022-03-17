@@ -1,0 +1,85 @@
+---
+title: "H&S Table 1"
+output: html_notebook
+---
+
+##Packages
+
+```{r}
+library("readxl", quietly = TRUE)
+library("tidyverse", quietly = TRUE)
+```
+
+```{r}
+Teams <- read_excel("Game logs 1999-2003.xlsx")
+```
+
+```{r}
+head(Teams)
+```
+
+```{r}
+Teams <- Teams %>% mutate(hwin = ifelse(home_score > visitor_score, 1, 0), 
+                          awin = ifelse(home_score < visitor_score, 1, 0))
+```
+
+```{r}
+Teams <- Teams %>% mutate(year = str_sub(as.character(date),1,4))
+head(Teams)
+```
+
+## We now want to aggragate the statistics that we need to construct SLG and OBP.
+
+```{r}
+Teamshome <- Teams %>% group_by(home, year) %>% 
+                    dplyr::summarise(visitor_ab = sum(visitor_ab),
+                              visitor_h = sum(visitor_h),
+                              visitor_2b = sum(visitor_2b),
+                              visitor_3b = sum(visitor_3b),
+                              visitor_hr = sum(visitor_hr),
+                              visitor_sf = sum(visitor_sf),
+                              visitor_hbp = sum(visitor_hbp),
+                              visitor_bb = sum(visitor_bb),
+                              home_ab = sum(home_ab),
+                              home_h = sum(home_h),
+                              home_2b = sum(home_2b),
+                              home_3b = sum(home_3b),
+                              home_hr = sum(home_hr),
+                              home_sf = sum(home_sf),
+                              home_hbp = sum(home_hbp),
+                              home_bb = sum(home_bb),
+                              hwin = sum(hwin),
+                              awin = sum(awin)) %>% 
+                              ungroup() %>% 
+                              rename(Team = home)
+head(Teamshome, 5)
+```
+
+```{r}
+Teamsaway <- Teams %>% group_by(year,visitor)%>%
+                      dplyr::summarise(visitor_ab = sum(visitor_ab),
+                      visitor_h = sum(visitor_h),
+                      visitor_2b = sum(visitor_2b),
+                      visitor_3b = sum(visitor_3b),
+                      visitor_hr = sum(visitor_hr),
+                      visitor_sf = sum(visitor_sf),
+                      visitor_hbp = sum(visitor_hbp),
+                      visitor_bb = sum(visitor_bb),
+                      home_ab = sum(home_ab),
+                      home_h = sum(home_h),
+                      home_2b = sum(home_2b),
+                      home_3b = sum(home_3b),
+                      home_hr = sum(home_hr),
+                      home_sf = sum(home_sf),
+                      home_hbp = sum(home_hbp),
+                      home_bb = sum(home_bb),
+                      hwin = sum(hwin),
+                      awin = sum(awin))%>%
+                      ungroup()%>%
+                      rename(Team = visitor)
+head(Teamsaway,5)
+```
+
+ *Ctrl+Alt+I*.
+
+
