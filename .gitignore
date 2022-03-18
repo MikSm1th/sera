@@ -145,3 +145,7 @@ pdfs/
 .python-version
 .Rhistory
 .Renviron
+
+sports_ana/course*/Week*/*.csv
+
+
